@@ -1,0 +1,23 @@
+{% extends './_base.html' %}
+{% block content %}
+
+  {% include './load_detail_include.html' %}
+
+  <div class="menu menu-bottom">
+    {% if perms.ervinloads.change_load %}
+      <div class="menu-item">
+      <a href="{% url 'ervinloads:load-update' object.pk %}">Edit</a>
+      </div>
+      <div class="menu-item">
+      <a href="{% url 'ervinloads:load-delete' object.pk %}">Delete</a>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+<script>
+    document.getElementById('a_addnote').addEventListener('click', function(e) {
+      e.preventDefault()
+      window.open(e.target.href)
+    });
+  </script>

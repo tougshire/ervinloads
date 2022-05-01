@@ -1,0 +1,26 @@
+<div class="field-wrapper">
+  {% if field.errors %}
+    <div class="errors">
+      {{ field.errors }}
+    </div>
+  {% endif %}
+  <div class="control">
+    <div class="label">
+      {% if label_tag %}
+        {{ label_tag }}
+      {% else %}
+        {{ field.label_tag }}
+      {% endif %}
+    </div>
+    <div class="field">
+      {{ field }} {{ extra }}
+    </div>
+  </div>
+  <div class="help_text">
+    {% if help_text %}
+      {{ help_text }}
+    {% else %}
+     {{ field.help_text}}
+    {% endif %}
+  </div>
+</div>
