@@ -1,0 +1,166 @@
+.body, h1, h2 {
+    color:darkblue;
+}
+.hidden {
+    display:none;
+}
+
+#div_homelogo {
+    margin: 5em auto;
+    text-align: center;
+}
+#img_homelogo {
+    text-align: center;
+    width:40%;
+}
+
+.menu-top, .app-menu {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 1px 1px;
+}
+.menu-bottom {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 1px 1px;
+}
+
+.form .formset {
+    margin-left:2em;
+}
+
+.form .field-wrapper {
+    margin-top:.5em;
+}
+
+.control {
+    display:flex;
+}
+
+.form .label {
+    width:15%;
+    flex-grow:0;
+}
+
+.form .help_text {
+    margin-left:15%;
+}
+.list {
+    width:100%;
+    display:table;
+}
+.list .row {
+    display:table-row
+}
+.list .rowhead {
+    background-color:#eeeeff;
+}
+
+.list .field {
+    display:table-cell;
+    border: 1px solid lightblue;
+    padding-left: .2em;
+    padding-right: .2em;
+}
+.list .rowhead .field {
+    border:1px solid blue;
+}
+.list .field::after {
+    content: "\00a0"
+}
+
+
+.control .label {
+    flex-grow:0;
+    width:15%;
+}
+
+.detail .detailset {
+    margin-left:2em;
+}
+
+.detail .field-wrapper {
+    margin-top:.5em;
+}
+
+.detail .control {
+    display:flex;
+}
+
+.detail .label {
+    width:15%;
+}
+
+.detail .help_text {
+    margin-left:15%;
+}
+
+
+
+
+
+.relatedset {
+    margin-left:2em;
+}
+
+
+
+/* Colors, Font, etc, */
+.menu a {
+    text-decoration: none;
+}
+
+/* Colors */
+.menu {
+    color: white;
+    background-color:cornflowerblue;
+}
+
+.app-menu {
+    background-color:cadetblue
+}
+
+.menu a:link, .menu a:visited {
+    color:white;
+}
+
+.vista {
+    display:grid;
+    grid-template-columns:1fr 2fr 1fr 1fr;
+}
+
+.vista .control {
+    display:flex;
+}
+
+/* .vista .field-wrapper {
+    margin-top:.5em;
+    width:100%;
+    display:flex;
+} */
+
+.vista .rowlabel {
+    /* width:15%; */
+    grid-row: auto;
+    grid-column: 1 / span 1
+}
+
+.vista .controlset {
+    grid-column: auto / span 1;
+    grid-row: auto;
+    display:flex;
+}
+
+.vista .help_text {
+    margin-left:15%;
+}
+
+.vista .viewformset {
+    margin-left:2em;
+}
+
+.vista .control {
+    display:flex;
+}
