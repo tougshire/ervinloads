@@ -370,7 +370,7 @@ class LocationDetail(PermissionRequiredMixin, DetailView):
 
         return context_data
 
-class LocationDelete(PermissionRequiredMixin, UpdateView):
+class LocationDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'ervinloads.delete_location'
     model = Location
     success_url = reverse_lazy('ervinloads:location-list')
@@ -551,7 +551,7 @@ class SupplierDetail(PermissionRequiredMixin, DetailView):
 
         return context_data
 
-class SupplierDelete(PermissionRequiredMixin, UpdateView):
+class SupplierDelete(PermissionRequiredMixin, DeleteView):
     permission_required = 'ervinloads.delete_supplier'
     model = Supplier
     success_url = reverse_lazy('ervinloads:supplier-list')
@@ -572,13 +572,10 @@ class SupplierList(PermissionRequiredMixin, ListView):
             'name',
         ])
 
-        # self.vista_defaults = QueryDict(urlencode([
-        #     ('filter__fieldname__0', ['completion__is_active']),
-        #     ('filter__op__0', ['exact']),
-        #     ('filter__value__0', [True]),
-        #     ('order_by', ['updated_when']),
-        #     ('paginate_by',self.paginate_by),
-        # ],doseq=True) )
+        self.vista_defaults = QueryDict(urlencode([
+            ('order_by', ['updated_when']),
+            ('paginate_by',self.paginate_by),
+        ],doseq=True) )
 
         return super().setup(request, *args, **kwargs)
 

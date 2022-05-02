@@ -1,0 +1,83 @@
+{% extends './_base.html' %}
+{% load static %}
+{% block content %}
+
+{% include 'tougshire_vistas/filter.html' %}
+
+<div class="list">
+    <div><a href="{% url 'ervinloads:supplier-create' %}">create</a></div>
+      <div class="row rowhead">
+        {% include './_list_head.html' with field='' %}
+        {% if 'name' in show_columns or not show_columns %}
+          {% include './_list_head.html' with field=labels.name %}
+        {% endif %}
+      </div>
+
+      {% for supplier in object_list %}
+        <div class="row">
+          <div class="listfield"><a href="{% url 'ervinloads:supplier-detail' supplier.pk %}">view</a></div>
+          {% if 'name' in show_columns or not show_columns %}
+            {% include './_list_field.html' with field=supplier.name %}
+          {% endif %}
+        </div>
+      {% endfor %}
+      <div>Count: {{ count }}</div>
+
+    </div>
+  </div>
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a id="a_first" href="?page=1">&laquo; first</a>
+            <a id="a_previous" href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a id="a_next" href="?page={{ page_obj.next_page_number }}">next</a>
+            <a id="a_last" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+{% endblock %}
+{% block bottomscript %}
+  {{ block.super }}
+
+  <script>
+
+    for( paginator of ['a_first', 'a_previous', 'a_next', 'a_last']) {
+      if(!(document.getElementById(paginator)==null) ) {
+        document.getElementById(paginator).addEventListener('click', function(e) {
+          e.preventDefault()
+          document.getElementById('frm_vista').action = e.target.href
+          document.getElementById('frm_vista').submit()
+        });
+      }
+    }
+  </script>
+
+
+  <script>
+    document.getElementById('btn_showvista').addEventListener('click', function(e){
+      e.preventDefault
+      toggleVisibility('div_vista', 'btn_showvista')
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if(e.ctrlKey) {
+        if(e.shiftKey) {
+          if(e.which==70) {
+            e.preventDefault();
+             toggleVisibility('div_vista', 'btn_showvista')
+          }
+        }
+      }
+    });
+    toggleVisibility('div_vista', 'btn_showvista', 0 )
+
+  </script>
+{% endblock %}
