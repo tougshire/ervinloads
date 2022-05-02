@@ -15,5 +15,11 @@
     {% include './_detail_field.html' with label=load_labels.photo field=object.photo %}
     {% include './_detail_field.html' with label=load_labels.completion field=object.completion %}
 
+    <div>
+      <h3>History</h3>
+    {% for history in load_histories %}
+    <div>{{ history.get_line_display }}</div>
+    {% endfor %}
+    </div>
   </div>
 

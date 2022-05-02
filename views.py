@@ -25,6 +25,7 @@ from .forms import (LoadForm, LocationForm, SupplierForm)
 from .models import (Completion, Load, Location, NotificationGroup, Status, Supplier,)
 
 from tougshire_history.views import update_history
+from tougshire_history.models import History
 
 def send_emails(request, load, action_reported):
     emails = []
@@ -156,6 +157,8 @@ class LoadDetail(PermissionRequiredMixin, DetailView):
 
         context_data = super().get_context_data(**kwargs)
         context_data['load_labels'] = { field.name: field.verbose_name.title() for field in Load._meta.get_fields() if type(field).__name__[-3:] != 'Rel' }
+
+        context_data['load_histories'] = History.objects.filter(app_label='ervinloads', modelname='load', objectid=self.object.pk)
 
         return context_data
 
