@@ -11,7 +11,7 @@
     {% include './_detail_field.html' with label=load_labels.status field=object.status %}
     {% include './_detail_field.html' with label=load_labels.created_when field=object.created_when %}
     {% include './_detail_field.html' with label=load_labels.updated_when field=object.updated_when %}
-    {% include './_detail_field.html' with label=load_labels.do_install field=object.do_install %}
+    {% include './_detail_field.html' with label=load_labels.do_install field=object.get_do_install_display %}
     {% include './_detail_field.html' with label=load_labels.photo field=object.photo %}
     {% include './_detail_field.html' with label=load_labels.completion field=object.completion %}
 
