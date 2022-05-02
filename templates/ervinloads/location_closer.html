@@ -1,0 +1,9 @@
+{% extends './_base.html' %}
+{% block content %}
+<script>
+if(window.opener) {
+  window.opener.addOptionFromPopup({{ object.pk }}, "{{ object }}", 'Location')
+  window.close()
+}
+</script>
+{% endblock %}
