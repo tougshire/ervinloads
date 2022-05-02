@@ -1,0 +1,17 @@
+{% extends './_base.html' %}
+{% block content %}
+
+  {% include './location_detail_include.html' %}
+
+  <div class="menu menu-bottom">
+    {% if perms.ervinloads.change_location %}
+      <div class="menu-item">
+      <a href="{% url 'ervinloads:location-update' object.pk %}">Edit</a>
+      </div>
+      <div class="menu-item">
+      <a href="{% url 'ervinloads:location-delete' object.pk %}">Delete</a>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
