@@ -378,6 +378,7 @@ class LocationDelete(PermissionRequiredMixin, DeleteView):
     model = Location
     success_url = reverse_lazy('ervinloads:location-list')
 
+
 class LocationList(PermissionRequiredMixin, ListView):
     permission_required = 'ervinloads.view_location'
     model = Location
@@ -394,13 +395,10 @@ class LocationList(PermissionRequiredMixin, ListView):
             'name',
         ])
 
-        # self.vista_defaults = QueryDict(urlencode([
-        #     ('filter__fieldname__0', ['completion__is_active']),
-        #     ('filter__op__0', ['exact']),
-        #     ('filter__value__0', [True]),
-        #     ('order_by', ['updated_when']),
-        #     ('paginate_by',self.paginate_by),
-        # ],doseq=True) )
+        self.vista_defaults = QueryDict(urlencode([
+            ('order_by', ['name']),
+            ('paginate_by',self.paginate_by),
+        ],doseq=True) )
 
         return super().setup(request, *args, **kwargs)
 
