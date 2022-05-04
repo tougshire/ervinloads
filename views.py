@@ -212,6 +212,7 @@ class LoadList(PermissionRequiredMixin, ListView):
         ])
         self.vista_settings['fields']['description']['available_for'].append('columns')
         self.vista_settings['fields']['notes']['available_for'].append('columns')
+        self.vista_settings['fields']['completion__is_active']['label']='Is Active'
 
         self.vista_defaults = QueryDict(urlencode([
             ('filter__fieldname__0', ['completion__is_active']),
