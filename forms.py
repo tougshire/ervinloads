@@ -38,3 +38,13 @@ class SupplierForm(forms.ModelForm):
         fields = [
             'name',
         ]
+
+class LocationMergeForm(forms.Form):
+    def __init__(self, **kwargs):
+        init = super().__init__(**kwargs)
+        print('tp 2253e59', self.initial)
+        return init
+
+    merge_from=forms.ModelChoiceField(Location.objects.all())
+    merge_to=forms.ModelChoiceField(Location.objects.all())
+

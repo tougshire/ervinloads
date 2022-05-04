@@ -1,0 +1,45 @@
+{% extends './_form.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Merge Locations</h2>
+  {{ form.errors }}
+  <form id='frm_merge' method="POST">
+    <input type="hidden" name='opener' id="input_opener">
+    <div class="form">
+      {% csrf_token %}
+
+      <p style="font-size:1.4em">All loads in {{ form.merge_from }}  <br>
+        will be moved to location: {{ form.merge_to }}</p>
+      <p style="font-size:1.6em">Then the first location will be deleted</p>
+      <div id="div_value_alert"></div>
+      {% include './_form_button.html' with label="Confirm" button='<button type="submit">Submit</button>' %}
+
+    </div>
+
+  </form>
+  <script>
+    if(window.opener) {
+      document.getElementById('input_opener').value = window.opener.location.href
+    }
+  </script>
+  <script>
+
+    function check_from_and_to() {
+      alert_div = document.getElementById("div_value_alert")
+      if(document.getElementById('{{ form.merge_from.id_for_label }}').value == document.getElementById('{{ form.merge_to.id_for_label }}').value) {
+        alert_div.innerText = "Merge From and Merge To cannot be the same"
+      } else {
+        alert_div.innerText = ""
+      }
+    }
+    document.getElementById('frm_merge').addEventListener('change', function() {
+      check_from_and_to()
+    });
+    check_from_and_to()
+  </script>
+{% endblock %}
+{% block bottomscript %}
+  {{ block.super }}
+{% endblock %}
+

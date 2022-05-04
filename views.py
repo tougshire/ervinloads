@@ -7,7 +7,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import FieldError, ObjectDoesNotExist
-from django.http import QueryDict
+from django.http import Http404, QueryDict
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
@@ -21,11 +21,12 @@ from tougshire_vistas.views import (default_vista, delete_vista,
                                     make_vista, make_vista_fields,
                                     retrieve_vista, vista_context_data)
 from django.core.mail import send_mail
-from .forms import (LoadForm, LocationForm, SupplierForm)
+from .forms import (LoadForm, LocationForm, LocationMergeForm, SupplierForm)
 from .models import (Completion, Load, Location, NotificationGroup, Status, Supplier,)
 
 from tougshire_history.views import update_history
 from tougshire_history.models import History
+from django.contrib.auth.decorators import permission_required
 
 def send_emails(request, load, action_reported):
     emails = []
@@ -378,6 +379,34 @@ class LocationDelete(PermissionRequiredMixin, DeleteView):
     model = Location
     success_url = reverse_lazy('ervinloads:location-list')
 
+
+class LocationMerge(PermissionRequiredMixin, FormView):
+    permission_required = 'ervinloads.delete_location'
+    success_url = reverse_lazy('ervinloads:location-list')
+    template_name = 'ervinloads/location_merge_form.html'
+    form_class = LocationMergeForm
+
+    def get_initial(self, **kwargs):
+        initial_data = super().get_initial(**kwargs)
+        print('tp 2253f05', self.kwargs.get('pk'))
+        initial_data['merge_from'] = self.kwargs.get('pk')
+        return initial_data
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['merge_to'] = Location.objects.get(pk=self.kwargs.get('pk'))
+        return context_data
+
+    def form_valid(self, form):
+        try:
+            Load.objects.filter(location=form.cleaned_data['merge_from']).update(location=form.cleaned_data['merge_to'])
+            form.cleaned_data['merge_from'].delete()
+        except Exception as e:
+            messages.add_message(self.request, messages.WARNING, 'This merge could not be completed' )
+            messages.add_message(self.request, messages.WARNING, str(e) )
+            return super().form_invalid(form)
+
+        return super().form_valid(form)
 
 class LocationList(PermissionRequiredMixin, ListView):
     permission_required = 'ervinloads.view_location'

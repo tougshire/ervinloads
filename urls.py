@@ -18,6 +18,7 @@ urlpatterns = [
     path('location/<int:pk>/update/', views.LocationUpdate.as_view(), name='location-update'),
     path('location/<int:pk>/detail/', views.LocationDetail.as_view(), name='location-detail'),
     path('location/<int:pk>/delete/', views.LocationDelete.as_view(), name='location-delete'),
+    path('location/<int:pk>/merge/', views.LocationMerge.as_view(), name='location-merge'),
     path('location/list/', views.LocationList.as_view(), name='location-list'),
     path('location/<int:pk>/close/', views.LocationClose.as_view(), name="location-close"),
     path('supplier/', RedirectView.as_view(url=reverse_lazy('ervinloads:supplier-list'))),

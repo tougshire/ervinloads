@@ -11,6 +11,9 @@
       <div class="menu-item">
       <a href="{% url 'ervinloads:location-delete' object.pk %}">Delete</a>
       </div>
+      <div class="menu-item">
+        <a href="{% url 'ervinloads:location-merge' object.pk %}">Merge Location</a>
+      </div>
     {% endif %}
   </div>
 {% endblock %}
