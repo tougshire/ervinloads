@@ -21,3 +21,4 @@ class NotificationGroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'email_addresses', 'is_default')
 
 admin.site.register(NotificationGroup, NotificationGroupAdmin)
+

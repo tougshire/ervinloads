@@ -218,7 +218,7 @@ class LoadList(PermissionRequiredMixin, ListView):
             ('filter__fieldname__0', ['completion__is_active']),
             ('filter__op__0', ['exact']),
             ('filter__value__0', [True]),
-            ('order_by', ['updated_when']),
+            ('order_by', ['-updated_when']),
             ('paginate_by',self.paginate_by),
         ],doseq=True) )
 
