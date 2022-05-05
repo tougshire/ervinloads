@@ -254,4 +254,17 @@ class LoadHistory(models.Model):
     class Meta:
         ordering=('-changed_when',)
 
+class Notification(models.Model):
+    load = models.ForeignKey(
+        Load,
+        on_delete = models.CASCADE,
+        help_text = 'The load about which to notify'
+    )
+    created_when = models.DateField(
+        'created when',
+        blank=True,
+        null=True,
+        help_text = 'The date this notification was created'
+    )
+
 #eof
