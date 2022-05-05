@@ -38,8 +38,6 @@ def send_emails(request, load, action_reported):
             if email > '' and not email in emails:
                 emails.append(email)
 
-    print('tp 2251e19', emails)
-
     load_url = request.build_absolute_uri(
         reverse('ervinloads:load-detail', kwargs={'pk': load.pk}))
 
@@ -113,7 +111,8 @@ class LoadCreate(PermissionRequiredMixin, CreateView):
 
         self.object = form.save()
 
-        send_emails(self.request, self.object, 'Created')
+        if not self.request.POST.get('dont_send'):
+            send_emails(self.request, self.object, 'Created')
 
         return response
 
@@ -142,7 +141,8 @@ class LoadUpdate(PermissionRequiredMixin, UpdateView):
 
         self.object = form.save()
 
-        send_emails(self.request, self.object, 'Updated')
+        if not self.request.POST.get('dont_send'):
+            send_emails(self.request, self.object, 'Updated')
 
         return response
 

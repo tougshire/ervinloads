@@ -53,6 +53,9 @@
       <div id="div_condition">
         {% include './_form_field.html' with field=form.completion %}
       </div>
+      <div id="div_dontsend">
+        {% include './_form_field.html' with field='<input type="checkbox" name="dont_send">' label_tag="Don't Send Email" %}
+      </div>
 
 
       {% include './_form_button.html' with label="Submit Form" button='<button type="submit">Submit</button>' %}
