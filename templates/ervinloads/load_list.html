@@ -84,7 +84,7 @@
             {% include './_list_field.html' with field=load.updated_when %}
           {% endif %}
           {% if 'do_install' in show_columns or not show_columns %}
-            {% include './_list_field.html' with field=load.do_install|yesno %}
+            {% include './_list_field.html' with field=load.get_do_install_display %}
           {% endif %}
           {% if 'photo' in show_columns or not show_columns %}
             {% include './_list_field.html' with field=load.photo %}
