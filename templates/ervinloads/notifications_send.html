@@ -1,0 +1,41 @@
+{% extends './_form.html' %}
+{% load static %}
+
+{% block content %}
+  <h2>Send Notifications</h2>
+  {{ form.errors }}
+  <form id='frm_send' method="POST">
+    <input type="hidden" name='opener' id="input_opener">
+    <div class="form">
+      {% csrf_token %}
+
+      <div id="div_notifications">
+        {% for notification in notifications %}
+          <div>
+            <input type="checkbox" id="notification_{{ forloop.counter0 }}" name="notifications" value={{ notification.pk}}
+            <label for="notification_{{ forloop.counter0 }}">
+              {{ notification.load }} /Send to:
+                {% for group in notification.load.notification_groups.all %}
+                  {{ group }},
+                {% endfor %}
+            </label>
+          </div>
+        {% endfor %}
+      </div>
+      {% if notifications%}
+        <hr/>
+        {{ form.operation }}
+        <hr/>
+        {% include './_form_button.html' with label="Confirm" button='<button type="submit">Submit</button>' %}
+      {% endif %}
+
+    </div>
+
+  </form>
+
+{% endblock %}
+{% block bottomscript %}
+  {{ block.super }}
+{% endblock %}
+
+

@@ -260,6 +260,12 @@ class Notification(models.Model):
         on_delete = models.CASCADE,
         help_text = 'The load about which to notify'
     )
+    action = models.CharField(
+        'action',
+        max_length=30,
+        blank=True,
+        help_text = 'The action (Created, Updated) to be reported'
+    )
     created_when = models.DateField(
         'created when',
         blank=True,

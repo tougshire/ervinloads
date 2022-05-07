@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import Load, Location, Supplier
+from .models import Load, Location, Notification, Supplier
 
 class LoadForm(forms.ModelForm):
 
@@ -47,4 +47,23 @@ class LocationMergeForm(forms.Form):
 
     merge_from=forms.ModelChoiceField(Location.objects.all())
     merge_to=forms.ModelChoiceField(Location.objects.all())
+
+class NotificationForm(forms.ModelForm):
+    class Meta:
+        model = Notification
+        fields = [
+            'load',
+            'created_when',
+        ]
+class NotificationSendForm(forms.Form):
+
+    notifications = forms.ModelMultipleChoiceField(
+        queryset = Notification.objects.all(),
+        widget = forms.CheckboxSelectMultiple
+    )
+    operation = forms.ChoiceField(
+        widget=forms.RadioSelect(),
+        choices = [('ss', 'Send Selected then Delete Selected'), ('sa', 'Send Selected then Delete All'), ('ns', 'Delete Selected, Don\'t Send')],
+        initial = 'ss'
+    )
 

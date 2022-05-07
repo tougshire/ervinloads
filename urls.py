@@ -28,5 +28,7 @@ urlpatterns = [
     path('supplier/<int:pk>/delete/', views.SupplierDelete.as_view(), name='supplier-delete'),
     path('supplier/list/', views.SupplierList.as_view(), name='supplier-list'),
     path('supplier/<int:pk>/close/', views.SupplierClose.as_view(), name="supplier-close"),
+    path('notifications/send/', views.NotificationsSend.as_view(), name='notifications-send'),
+    path('notifications/count/', views.notification_count, name='notifications-count')
 
 ]

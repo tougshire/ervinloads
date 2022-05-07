@@ -1,22 +1,47 @@
-<div class="field-wrapper">
+<div class="form-field-outer-wrapper">
   {% if field.errors %}
     <div class="errors">
       {{ field.errors }}
     </div>
   {% endif %}
-  <div class="control">
-    <div class="label">
+  <div class="form-field-inner-wrapper">
+    <div class="form-field-label">
       {% if label_tag %}
         {{ label_tag }}
       {% else %}
         {{ field.label_tag }}
       {% endif %}
     </div>
-    <div class="field">
-      {{ field }} {{ extra }}
+    <div class="form-field-control">
+      {{ before_field }}{{ before_fields }}
+      {% if field %}
+        {{ field }}
+      {% elif field_1%}
+        {{ field_1_label }} {{ field_1 }}
+        {% if field_2 %}
+          {{ between_fields }}{{ field_2_label }}{{ field_2 }}
+          {% if field_3 %}
+            {{ between_fields }}{{ field_3_label }}{{ field_3 }}
+            {% if field_4 %}
+              {{ between_fields }}{{ field_4_label }}{{ field_4 }}
+              {% if field_5 %}
+                {{ between_fields }}{{ field_5_label }}{{ field_5 }}
+                {% if field_6 %}
+                  {{ between_fields }}{{ field_6_label }}{{ field_6 }}
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% elif fields %}
+        {% for field in fields %}
+          {% if not forloop.first %}{{ between_fields }}{% endif %}{{ field }}
+        {% endfor %}
+      {% endif %}
+      {{ after_fields }}{{ after_field }}
     </div>
   </div>
-  <div class="help_text">
+  <div class="form-field-help-text">
     {% if help_text %}
       {{ help_text }}
     {% else %}

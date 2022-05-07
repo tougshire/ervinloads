@@ -21,15 +21,16 @@ from tougshire_vistas.views import (default_vista, delete_vista,
                                     make_vista, make_vista_fields,
                                     retrieve_vista, vista_context_data)
 from django.core.mail import send_mail
-from .forms import (LoadForm, LocationForm, LocationMergeForm, SupplierForm)
-from .models import (Completion, Load, Location, NotificationGroup, Status, Supplier,)
+from .forms import (LoadForm, LocationForm, LocationMergeForm, NotificationForm, NotificationSendForm, SupplierForm)
+from .models import (Completion, Load, Location, Notification, NotificationGroup, Status, Supplier,)
 
 from tougshire_history.views import update_history
 from tougshire_history.models import History
 from django.contrib.auth.decorators import permission_required
 
-def send_emails(request, load, action_reported):
+def send_notification(request, notification):
     emails = []
+    load = notification.load
     notification_groups = load.notification_groups.all()
     for notification_group in notification_groups:
         emails_in_group = re.split( r",|;", notification_group.email_addresses)
@@ -41,31 +42,41 @@ def send_emails(request, load, action_reported):
     load_url = request.build_absolute_uri(
         reverse('ervinloads:load-detail', kwargs={'pk': load.pk}))
 
-    mail_subject = f"Load { action_reported }: {load.po_number} - { load.job_name }"
+    mail_subject = f"Load { notification.action }: {load.po_number} - { load.job_name }"
 
     mail_from = settings.ERVINSUFFOLK_FROM_EMAIL if hasattr(
         settings, 'ERVINSUFFOLK_FROM_EMAIL') else settings.DEFAULT_FROM_EMAIL
 
     mail_message = "\n".join(
         [
-            f"The following load was { action_reported }",
+            f"The following load was { notification.action }",
             "",
-            f"{ load.job_name } - { load.po_number } {load.supplier } { load.spo_number }",
+            f"Job Name: { load.job_name }",
+            f"PO Numner: { load.po_number }" ,
+            f"Supplier: {load.supplier }",
+            f"Supplier PO Number: { load.spo_number }",
+            f"Description: { load.description }",
             f"Location: { load.location.name }",
             f"Delivery Status: { load.status.name }",
             f"Completion Status: { load.completion.name }",
+            f"Notes: { load.notes }",
             f"URL: { load_url }",
         ]
     )
 
     mail_html_message = "<br>\n".join(
         [
-            f"The following load was { action_reported }",
+            f"The following load was { notification.action }",
             "",
-            f"{ load.job_name } - { load.po_number } {load.supplier } { load.spo_number }",
+            f"Job Name: { load.job_name }",
+            f"PO Number: { load.po_number }",
+            f"Supplier: {load.supplier }",
+            f"Supplier PO Number: { load.spo_number }",
+            f"Description: { load.description }",
             f"Location: { load.location.name }",
             f"Delivery Status: { load.status.name }",
             f"Completion Status: { load.completion.name }",
+            f"Notes: { load.notes }",
             f"URL: <a href=\"{ load_url }\">{ load_url }</a>"
         ]
     )
@@ -87,6 +98,7 @@ def send_emails(request, load, action_reported):
 
         print(e, ' at ', sys.exc_info()[2].tb_lineno)
 
+        return e
 
 class LoadCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'ervinloads.add_load'
@@ -111,8 +123,14 @@ class LoadCreate(PermissionRequiredMixin, CreateView):
 
         self.object = form.save()
 
-        if not self.request.POST.get('dont_send'):
-            send_emails(self.request, self.object, 'Created')
+        notification = Notification.objects.create(
+            load = self.object,
+            action = 'Created'
+        )
+
+        if self.request.POST.get('send_now'):
+            send_notification(self.request, notification)
+            notification.delete()
 
         return response
 
@@ -141,8 +159,19 @@ class LoadUpdate(PermissionRequiredMixin, UpdateView):
 
         self.object = form.save()
 
-        if not self.request.POST.get('dont_send'):
-            send_emails(self.request, self.object, 'Updated')
+        notification, created = Notification.objects.get_or_create(
+            load = self.object
+        )
+        notification.save()
+        if created:
+            notification.action = "Updated"
+        else:
+            notification.action = "Created and Updated"
+        notification.save()
+
+        if self.request.POST.get('send_now'):
+            send_notification(self.request, notification)
+            notification.delete()
 
         return response
 
@@ -706,3 +735,55 @@ class SupplierClose(PermissionRequiredMixin, DetailView):
     permission_required = 'ervinloads.view_supplier'
     model = Supplier
     template_name = 'ervinloads/supplier_closer.html'
+
+
+class NotificationsSend(PermissionRequiredMixin, FormView):
+    permission_required = 'ervinloads.change_load'
+
+    form_class = NotificationSendForm
+    template_name = 'ervinloads/notifications_send.html'
+
+    def get_success_url(self):
+        return reverse('ervinloads:notifications-send')
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['notifications'] = Notification.objects.all()
+        return context_data
+
+    def form_valid(self, form):
+
+        response = super().form_valid(form)
+
+        if( form.cleaned_data['operation'] == 'ss'):
+            for notification in form.cleaned_data['notifications']:
+                try:
+                    send_notification(self.request, notification )
+                    notification.delete()
+                except Exception as e:
+                    print(e)
+
+        elif(form.cleaned_data['operation']) == 'sa':
+            for notification in form.cleaned_data['notifications']:
+                try:
+                    send_notification(self.request, notification )
+                    notification.delete()
+                except Exception as e:
+                    print(e)
+
+            for notification in Notification.objects.all():
+                if not notification in form.cleaned_data['notifications']:
+                    notification.delete()
+
+        elif(form.cleaned_data['operation']) == 'ns':
+            for notification in form.cleaned_data['notifications']:
+                try:
+                    notification.delete()
+                except Exception as e:
+                    print(e)
+
+        return response
+
+def notification_count(request):
+    return HttpResponse(Notification.objects.count())
+

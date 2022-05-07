@@ -13,4 +13,33 @@
     {% endif %}
   {% endif %}
 
+  {% if perms.ervinloads.change_load %}
+    {% url 'ervinloads:notifications-send' as notification_url %}
+    {% if notification_url == url_here %}
+      <div class="menu-item menu-here">
+        Notifications to Send<span id="spn_notification-count"></span>
+      </div>
+    {% else %}
+      <div class="menu-item">
+        <a href="{{ notification_url }}">Notifications to Send</a><span id="spn_notification-count"></span>
+      </div>
+    {% endif %}
+  {% endif %}
+
+    <script>
+      function notificationCount() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+            if(parseInt(this.responseText) > 0) {
+              document.getElementById("spn_notification-count").innerText = "(" + this.responseText + ")";
+            }
+          }
+        };
+        xhttp.open("GET", "{% url 'ervinloads:notifications-count' %}", true);
+        xhttp.send();
+      }
+      notificationCount()
+    </script>
+
 </div>
