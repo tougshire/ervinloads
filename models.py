@@ -162,7 +162,7 @@ class Load(models.Model):
     )
     description = models.TextField(
         'description',
-        null=True,
+        blank=True,
         help_text = 'A description of the load'
     )
     notes = models.TextField(
