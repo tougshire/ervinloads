@@ -41,11 +41,6 @@ class CompletionStatus(models.Model):
         max_length=50,
         help_text = 'The status of the load'
     )
-    recipients = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        blank = True,
-        help_text = 'The recipients of notices for when a load changes to this status'
-    )
     rank = models.IntegerField(
         'rank',
         default=1000,
@@ -72,11 +67,6 @@ class DeliveryStatus(models.Model):
     name = models.CharField(
         max_length=50,
         help_text = 'The delivery status of the load'
-    )
-    recipients = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        blank = True,
-        help_text = 'The recipients of notices for when a load changes to this status'
     )
     rank = models.IntegerField(
         'rank',
