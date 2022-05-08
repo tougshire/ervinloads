@@ -14,14 +14,14 @@
   {% endif %}
 
   {% if perms.ervinloads.change_load %}
-    {% url 'ervinloads:notifications-send' as notification_url %}
+    {% url 'ervinloads:notifications-queue' as notification_url %}
     {% if notification_url == url_here %}
       <div class="menu-item menu-here">
-        Notifications to Send<span id="spn_notification-count"></span>
+        Notification Queue<span id="spn_notification-count"></span>
       </div>
     {% else %}
       <div class="menu-item">
-        <a href="{{ notification_url }}">Notifications to Send</a><span id="spn_notification-count"></span>
+        <a href="{{ notification_url }}">Notification Queue</a><span id="spn_notification-count"></span>
       </div>
     {% endif %}
   {% endif %}

@@ -737,14 +737,14 @@ class SupplierClose(PermissionRequiredMixin, DetailView):
     template_name = 'ervinloads/supplier_closer.html'
 
 
-class NotificationsSend(PermissionRequiredMixin, FormView):
+class NotificationQueue(PermissionRequiredMixin, FormView):
     permission_required = 'ervinloads.change_load'
 
     form_class = NotificationSendForm
-    template_name = 'ervinloads/notifications_send.html'
+    template_name = 'ervinloads/notification_queue.html'
 
     def get_success_url(self):
-        return reverse('ervinloads:notifications-send')
+        return reverse('ervinloads:notification-queue')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
