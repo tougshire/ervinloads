@@ -58,7 +58,7 @@ class CompletionStatus(models.Model):
     )
 
     class Meta:
-        ordering=('-is_default', 'rank', 'name',)
+        ordering=('rank', 'name',)
 
     def __str__(self):
         return self.name
@@ -85,7 +85,7 @@ class DeliveryStatus(models.Model):
     )
 
     class Meta:
-        ordering=('-is_default', 'rank', 'name',)
+        ordering=('rank', 'name',)
 
     def __str__(self):
         return self.name

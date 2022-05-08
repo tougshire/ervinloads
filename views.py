@@ -232,6 +232,7 @@ class LoadList(PermissionRequiredMixin, ListView):
             'notes',
             'location',
             'delivery_status',
+            'delivery_status__is_active',
             'created_when',
             'updated_when',
             'do_install',
@@ -241,10 +242,11 @@ class LoadList(PermissionRequiredMixin, ListView):
         ])
         self.vista_settings['fields']['description']['available_for'].append('columns')
         self.vista_settings['fields']['notes']['available_for'].append('columns')
-        self.vista_settings['fields']['completion_status__is_active']['label']='Is Active'
+        self.vista_settings['fields']['delivery_status__is_active']['label']='Delivery Is Pending'
+        self.vista_settings['fields']['completion_status__is_active']['label']='Completion Is Pending'
 
         self.vista_defaults = QueryDict(urlencode([
-            ('filter__fieldname__0', ['completion_status__is_active']),
+            ('filter__fieldname__0', ['delivery_status__is_active']),
             ('filter__op__0', ['exact']),
             ('filter__value__0', [True]),
             ('order_by', ['-updated_when']),

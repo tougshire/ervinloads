@@ -3,7 +3,10 @@ from .models import (Location, CompletionStatus, NotificationGroup, DeliveryStat
 
 admin.site.register(Location)
 
-admin.site.register(DeliveryStatus)
+class DeliveryStatusAdmin(admin.ModelAdmin):
+    list_display=('name', 'is_active', 'is_default')
+
+admin.site.register(DeliveryStatus, DeliveryStatusAdmin)
 
 class LoadAdmin(admin.ModelAdmin):
     list_display=('po_number', 'job_name', 'delivery_status', 'completion_status')
@@ -13,7 +16,7 @@ admin.site.register(Load, LoadAdmin)
 admin.site.register(LoadHistory)
 
 class CompletionStatusAdmin(admin.ModelAdmin):
-    list_display=('name', 'is_active')
+    list_display=('name', 'is_active', 'is_default')
 
 admin.site.register(CompletionStatus, CompletionStatusAdmin)
 
