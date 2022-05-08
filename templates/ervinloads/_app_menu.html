@@ -14,7 +14,7 @@
   {% endif %}
 
   {% if perms.ervinloads.change_load %}
-    {% url 'ervinloads:notifications-queue' as notification_url %}
+    {% url 'ervinloads:notification-queue' as notification_url %}
     {% if notification_url == url_here %}
       <div class="menu-item menu-here">
         Notification Queue<span id="spn_notification-count"></span>
