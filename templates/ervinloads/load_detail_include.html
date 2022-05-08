@@ -8,12 +8,12 @@
     {% include './_detail_field.html' with label=load_labels.description field=object.description %}
     {% include './_detail_field.html' with label=load_labels.notes field=object.notes %}
     {% include './_detail_field.html' with label=load_labels.location field=object.location %}
-    {% include './_detail_field.html' with label=load_labels.status field=object.status %}
+    {% include './_detail_field.html' with label=load_labels.delivery_status field=object.delivery_status %}
     {% include './_detail_field.html' with label=load_labels.created_when field=object.created_when %}
     {% include './_detail_field.html' with label=load_labels.updated_when field=object.updated_when %}
     {% include './_detail_field.html' with label=load_labels.do_install field=object.get_do_install_display %}
     {% include './_detail_field.html' with label=load_labels.photo field=object.photo %}
-    {% include './_detail_field.html' with label=load_labels.completion field=object.completion %}
+    {% include './_detail_field.html' with label=load_labels.completion_status field=object.completion_status %}
 
     <div>
       <h3>History</h3>

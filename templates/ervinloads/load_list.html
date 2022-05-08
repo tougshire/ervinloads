@@ -29,8 +29,8 @@
         {% if 'location' in show_columns or not show_columns %}
           {% include './_list_head.html' with field=labels.location %}
         {% endif %}
-        {% if 'status' in show_columns or not show_columns %}
-          {% include './_list_head.html' with field=labels.status %}
+        {% if 'delivery_status' in show_columns or not show_columns %}
+          {% include './_list_head.html' with field=labels.delivery_status %}
         {% endif %}
         {% if 'created_when' in show_columns or not show_columns %}
           {% include './_list_head.html' with field=labels.created_when %}
@@ -44,8 +44,8 @@
         {% if 'photo' in show_columns or not show_columns %}
           {% include './_list_head.html' with field=labels.photo %}
         {% endif %}
-        {% if 'completion' in show_columns or not show_columns %}
-          {% include './_list_head.html' with field=labels.completion %}
+        {% if 'completion_status' in show_columns or not show_columns %}
+          {% include './_list_head.html' with field=labels.completion_status %}
         {% endif %}
 
       </div>
@@ -74,8 +74,8 @@
           {% if 'location' in show_columns or not show_columns %}
             {% include './_list_field.html' with field=load.location %}
           {% endif %}
-          {% if 'status' in show_columns or not show_columns %}
-            {% include './_list_field.html' with field=load.status %}
+          {% if 'delivery_status' in show_columns or not show_columns %}
+            {% include './_list_field.html' with field=load.delivery_status %}
           {% endif %}
           {% if 'created_when' in show_columns or not show_columns %}
             {% include './_list_field.html' with field=load.created_when %}
@@ -89,8 +89,8 @@
           {% if 'photo' in show_columns or not show_columns %}
             {% include './_list_field.html' with field=load.photo %}
           {% endif %}
-          {% if 'completion' in show_columns or not show_columns %}
-            {% include './_list_field.html' with field=load.completion %}
+          {% if 'completion_status' in show_columns or not show_columns %}
+            {% include './_list_field.html' with field=load.completion_status %}
           {% endif %}
 
 

@@ -14,13 +14,13 @@ class LoadForm(forms.ModelForm):
             'description',
             'notes',
             'location',
-            'status',
+            'delivery_status',
             'created_when',
             'updated_when',
             'do_install',
             'photo',
             'notification_groups',
-            'completion',
+            'completion_status',
         ]
         widgets = {
         }

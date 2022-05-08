@@ -22,7 +22,7 @@ from tougshire_vistas.views import (default_vista, delete_vista,
                                     retrieve_vista, vista_context_data)
 from django.core.mail import send_mail
 from .forms import (LoadForm, LocationForm, LocationMergeForm, NotificationForm, NotificationSendForm, SupplierForm)
-from .models import (Completion, Load, Location, Notification, NotificationGroup, Status, Supplier,)
+from .models import (CompletionStatus, Load, Location, Notification, NotificationGroup, DeliveryStatus, Supplier,)
 
 from tougshire_history.views import update_history
 from tougshire_history.models import History
@@ -57,8 +57,8 @@ def send_notification(request, notification):
             f"Supplier PO Number: { load.spo_number }",
             f"Description: { load.description }",
             f"Location: { load.location.name }",
-            f"Delivery Status: { load.status.name }",
-            f"Completion Status: { load.completion.name }",
+            f"Delivery Status: { load.delivery_status.name }",
+            f"Completion Status: { load.completion_status.name }",
             f"Notes: { load.notes }",
             f"URL: { load_url }",
         ]
@@ -74,8 +74,8 @@ def send_notification(request, notification):
             f"Supplier PO Number: { load.spo_number }",
             f"Description: { load.description }",
             f"Location: { load.location.name }",
-            f"Delivery Status: { load.status.name }",
-            f"Completion Status: { load.completion.name }",
+            f"Delivery Status: { load.delivery_status.name }",
+            f"Completion Status: { load.completion_status.name }",
             f"Notes: { load.notes }",
             f"URL: <a href=\"{ load_url }\">{ load_url }</a>"
         ]
@@ -109,8 +109,8 @@ class LoadCreate(PermissionRequiredMixin, CreateView):
 
         initial = super().get_initial()
         initial['notification_groups'] = [group for group in NotificationGroup.objects.filter(is_default=True)]
-        initial['status'] = Status.objects.filter(is_default=True).first()
-        initial['completion'] = Completion.objects.filter(is_default=True).first()
+        initial['delivery_status'] = DeliveryStatus.objects.filter(is_default=True).first()
+        initial['completion_status'] = CompletionStatus.objects.filter(is_default=True).first()
         initial['location'] = Location.objects.filter(is_default=True).first()
 
         return initial
@@ -231,20 +231,20 @@ class LoadList(PermissionRequiredMixin, ListView):
             'description',
             'notes',
             'location',
-            'status',
+            'delivery_status',
             'created_when',
             'updated_when',
             'do_install',
             'photo',
-            'completion',
-            'completion__is_active'
+            'completion_status',
+            'completion_status__is_active'
         ])
         self.vista_settings['fields']['description']['available_for'].append('columns')
         self.vista_settings['fields']['notes']['available_for'].append('columns')
-        self.vista_settings['fields']['completion__is_active']['label']='Is Active'
+        self.vista_settings['fields']['completion_status__is_active']['label']='Is Active'
 
         self.vista_defaults = QueryDict(urlencode([
-            ('filter__fieldname__0', ['completion__is_active']),
+            ('filter__fieldname__0', ['completion_status__is_active']),
             ('filter__op__0', ['exact']),
             ('filter__value__0', [True]),
             ('order_by', ['-updated_when']),

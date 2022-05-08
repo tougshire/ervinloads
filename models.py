@@ -5,7 +5,7 @@ from datetime import datetime
 class Location(models.Model):
     name = models.CharField(
         max_length=80,
-        help_text = 'The status of the load'
+        help_text = 'The location of the load'
     )
     is_default = models.BooleanField(
         'is default',
@@ -36,7 +36,7 @@ class Supplier(models.Model):
     def __str__(self):
         return self.name
 
-class Completion(models.Model):
+class CompletionStatus(models.Model):
     name = models.CharField(
         max_length=50,
         help_text = 'The status of the load'
@@ -68,10 +68,10 @@ class Completion(models.Model):
     def __str__(self):
         return self.name
 
-class Status(models.Model):
+class DeliveryStatus(models.Model):
     name = models.CharField(
         max_length=50,
-        help_text = 'The status of the load'
+        help_text = 'The delivery status of the load'
     )
     recipients = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
@@ -176,11 +176,11 @@ class Load(models.Model):
         null=True,
         help_text = 'The location of this load'
     )
-    status = models.ForeignKey(
-        Status,
+    delivery_status = models.ForeignKey(
+        DeliveryStatus,
         on_delete = models.SET_NULL,
         null=True,
-        help_text = 'The status of the load'
+        help_text = 'The delivery status of the load'
     )
     created_when = models.DateTimeField(
         'created',
@@ -209,8 +209,8 @@ class Load(models.Model):
         blank = True,
         help_text = 'Notification groups that should be notified about changes to this load'
     )
-    completion = models.ForeignKey(
-        Completion,
+    completion_status = models.ForeignKey(
+        CompletionStatus,
         on_delete = models.SET_NULL,
         null=True,
         help_text = 'The completion status of this load'
