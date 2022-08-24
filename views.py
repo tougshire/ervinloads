@@ -145,7 +145,7 @@ def send_notifications(request, notifications):
             ]
         )
 
-        mail_html_message = "<br>\n".join(
+        mail_html_message = mail_html_message + "<br>\n".join(
             [
                 f"The following load was { notification.action }",
                 "",
@@ -161,7 +161,6 @@ def send_notifications(request, notifications):
                 f"URL: <a href=\"{ load_url }\">{ load_url }</a>",
                 '------------------------------------',
                 ''
-
             ]
         )
 
