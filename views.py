@@ -100,6 +100,90 @@ def send_notification(request, notification):
 
         return e
 
+
+def send_notifications(request, notifications):
+    email_addresses = []
+
+    mail_from = settings.ERVINSUFFOLK_FROM_EMAIL if hasattr(
+        settings, 'ERVINSUFFOLK_FROM_EMAIL') else settings.DEFAULT_FROM_EMAIL
+
+    mail_subject = 'Notification'
+    mail_message=''
+    
+    for notification in notifications:
+        load = notification.load
+        notification_groups = load.notification_groups.all()
+        for notification_group in notification_groups:
+            emails_in_group = re.split( r",|;", notification_group.email_addresses)
+            for email_address in emails_in_group:
+                email_address = email_address.strip()
+                if email_address > '' and not email_address in email_addresses:
+                    email_addresses.append(email_address)
+
+        mail_subject = mail_subject + f":: Load { notification.action }: {load.po_number} - { load.job_name }" 
+
+        load_url = request.build_absolute_uri(
+            reverse('ervinloads:load-detail', kwargs={'pk': load.pk}))
+
+
+        mail_message = mail_message + "\n".join(
+            [
+                f"The following load was { notification.action }",
+                "",
+                f"Job Name: { load.job_name }",
+                f"PO Numner: { load.po_number }" ,
+                f"Supplier: {load.supplier }",
+                f"Supplier PO Number: { load.spo_number }",
+                f"Description: { load.description }",
+                f"Location: { load.location.name }",
+                f"Delivery Status: { load.delivery_status.name }",
+                f"Completion Status: { load.completion_status.name }",
+                f"Notes: { load.notes }",
+                f"URL: { load_url }",
+                '------------------------------------',
+                '',
+            ]
+        )
+
+        mail_html_message = "<br>\n".join(
+            [
+                f"The following load was { notification.action }",
+                "",
+                f"Job Name: { load.job_name }",
+                f"PO Number: { load.po_number }",
+                f"Supplier: {load.supplier }",
+                f"Supplier PO Number: { load.spo_number }",
+                f"Description: { load.description }",
+                f"Location: { load.location.name }",
+                f"Delivery Status: { load.delivery_status.name }",
+                f"Completion Status: { load.completion_status.name }",
+                f"Notes: { load.notes }",
+                f"URL: <a href=\"{ load_url }\">{ load_url }</a>",
+                '------------------------------------',
+                ''
+
+            ]
+        )
+
+    mail_recipients = email_addresses
+
+    try:
+        send_mail(
+            mail_subject,
+            mail_message,
+            mail_from,
+            mail_recipients,
+            html_message=mail_html_message,
+            fail_silently=False,
+        )
+    except Exception as e:
+        messages.add_message(request, messages.WARNING, 'There was an error sending emails.')
+        messages.add_message(request, messages.WARNING, e)
+
+        print(e, ' at ', sys.exc_info()[2].tb_lineno)
+
+        return e
+
 class LoadCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'ervinloads.add_load'
     model = Load
@@ -757,32 +841,63 @@ class NotificationQueue(PermissionRequiredMixin, FormView):
 
         response = super().form_valid(form)
 
+        notifications = form.cleaned_data['notifications']
         if( form.cleaned_data['operation'] == 'ss'):
-            for notification in form.cleaned_data['notifications']:
-                try:
-                    send_notification(self.request, notification )
-                    notification.delete()
-                except Exception as e:
-                    print(e)
 
-        elif(form.cleaned_data['operation']) == 'sa':
-            for notification in form.cleaned_data['notifications']:
-                try:
-                    send_notification(self.request, notification )
+            try:
+                send_notifications(self.request, notifications )
+                for notification in notifications:
                     notification.delete()
-                except Exception as e:
-                    print(e)
+            except Exception as e:
+                print(e)
+            
+        elif(form.cleaned_data['operation']) == 'sa':
+
+            try:
+                send_notification(self.request, notifications )
+
+            except Exception as e:
+                print(e)
 
             for notification in Notification.objects.all():
-                if not notification in form.cleaned_data['notifications']:
-                    notification.delete()
+                notification.delete()
 
         elif(form.cleaned_data['operation']) == 'ns':
-            for notification in form.cleaned_data['notifications']:
+            for notification in notifications:
                 try:
                     notification.delete()
                 except Exception as e:
                     print(e)
+
+
+
+
+        # if( form.cleaned_data['operation'] == 'ss'):
+        #     for notification in form.cleaned_data['notifications']:
+        #         try:
+        #             send_notification(self.request, notification )
+        #             notification.delete()
+        #         except Exception as e:
+        #             print(e)
+
+        # elif(form.cleaned_data['operation']) == 'sa':
+        #     for notification in form.cleaned_data['notifications']:
+        #         try:
+        #             send_notification(self.request, notification )
+        #             notification.delete()
+        #         except Exception as e:
+        #             print(e)
+
+        #     for notification in Notification.objects.all():
+        #         if not notification in form.cleaned_data['notifications']:
+        #             notification.delete()
+
+        # elif(form.cleaned_data['operation']) == 'ns':
+        #     for notification in form.cleaned_data['notifications']:
+        #         try:
+        #             notification.delete()
+        #         except Exception as e:
+        #             print(e)
 
         return response
 
