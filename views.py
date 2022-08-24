@@ -109,6 +109,7 @@ def send_notifications(request, notifications):
 
     mail_subject = 'Notification'
     mail_message=''
+    mail_html_message=''
     
     for notification in notifications:
         load = notification.load
